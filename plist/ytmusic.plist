@@ -11,7 +11,7 @@
 					<key>kind</key>
 					<string>software-package</string>
 					<key>url</key>
-					<string>https://archive.org/download/locket-1.63.0-1708707859/Locket_1.63.0_1708707859.ipa</string>
+					<string>https://ipa.echxanh.xyz/ipa/B612.ipa</string>
 				</dict>
 				<dict>
 					<key>kind</key>
@@ -33,15 +33,15 @@
 			<key>metadata</key>
 			<dict>
 				<key>bundle-identifier</key>
-				<string>com.locket.Locket</string>
+				<string>com.google.ios.youtubemusic</string>
 				<key>bundle-version</key>
-				<string>1.63.0</string>
+				<string>6.37.1</string>
 				<key>kind</key>
 				<string>software</string>
 				<key>subtitle</key>
 				<string>Con Cặc</string>
 				<key>title</key>
-				<string>Locket</string>
+				<string>YouTubeMusic</string>
 			</dict>
 		</dict>
 	</array>
