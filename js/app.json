@@ -34,5 +34,20 @@
             "size": 80533481,
             "type": 1
         }
+		        {
+            "name": "Lịch Vạn Niên 2024",
+            "bundleIdentifier": "com.garena.game.kgvndvc",
+            "developerName": "DVC",
+            "version": "6.6.6",
+            "versionDate": "2024-03-30T21:40:00+08:00",
+            "versionDescription": " unlock premium ",
+            "downloadURL": "https://echxanh.id.vn/ipa/Lịch Vạn Niên 2024 .ipa",
+            "localizedDescription": "Chức Năng Hack Map",
+            "iconURL": "https://echxanh.id.vn/img/Lịch Vạn Niên 2024.jpg",
+            "tintColor": "018084",
+            "isLanZouCloud": 0,
+            "size": 33736365,
+            "type": 1
+        },
     ]
 }
