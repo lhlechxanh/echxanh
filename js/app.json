@@ -10,6 +10,21 @@
         "repoIcon": "https://ipa.echxanh.xyz/img/icondowload.png"
     },
     "apps": [
+        {
+            "name": "Liên Quân EchXanh",
+            "bundleIdentifier": "com.garena.game.kgvndvc",
+            "developerName": "EchXanh",
+            "version": "1.53.1",
+            "versionDate": "2024-04-07T21:40:00+08:00",
+            "versionDescription": "HACK MAP ",
+            "downloadURL": "https://archive.org/download/lien-quan-mobile-dvc-i-os-v-1.53.11/Li%C3%AAn%20Qu%C3%A2n%20Mobile%20-%20DVC%20iOS%20-%20%5Bv1.53.11%5D.ipa",
+            "localizedDescription": "Chức Năng Hack Map - Cập nhập ngày 7/4/2024",
+            "iconURL": "https://echxanh.id.vn/img/liqiechxanh.jpg",
+            "tintColor": "018084",
+            "isLanZouCloud": 0,
+            "size": 162298296,
+            "type": 1
+        },
 	    {
             "name": "Liên Quân MOD DVC",
             "bundleIdentifier": "com.garena.game.kgvndvc",
