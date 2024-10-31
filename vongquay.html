@@ -29,12 +29,27 @@
     <style type="text/css"></style>
 </head>
 <style>
-body {
-  background-image: url('https://c4.wallpaperflare.com/wallpaper/434/309/126/minimalism-cat-funny-digital-art-artwork-hd-wallpaper-preview.jpg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: 100% 100%;
-}
+   /* Cài đặt mặc định cho nền desktop */
+        body {
+            background-image: url('https://c4.wallpaperflare.com/wallpaper/434/309/126/minimalism-cat-funny-digital-art-artwork-hd-wallpaper-preview.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        /* Nền cho thiết bị di động (màn hình nhỏ hơn 768px) */
+        @media only screen and (max-width: 768px) {
+            body {
+                background-image: url('https://meatworld.com.vn/wp-content/uploads/anh-nhan-vat-gai-anime-29.jpg');
+            }
+        }
 </style>
   <body>
     <div class="container-fluid">
