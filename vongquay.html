@@ -47,6 +47,7 @@ body {
           <textarea id="names" placeholder="Danh sách tên ...." class="form-control" style="vertical-align:top;width:300px;height:400px"></textarea>
           <button class="btn btn-default" onclick="addNames()">Thêm Vào Vòng Quay</button>
           <button class="btn btn-default" onclick="spin()">Quay !</button>
+              <button class="btn btn-default" onclick="copyText()">Copy</button>
         </div>
       </div>
     </div>
@@ -69,7 +70,53 @@ body {
     </div>
 
     <script>
+        function copyText() {
+            // Nội dung danh sách tên cần sao chép
+            var text = `DOAN HONG MINH
+TRINH NGỌC VANG
+BÙI THỊ THOM
+TRAN THỊ NGỌC ANH
+NGUYEN NGOC LINH
+DOAN THỊ LINH
+PHAM THU TRANG
+LE HOANG MINH
+NGUYEN THI TRUC QUYEN
+LIEU NGUYEN HONG QUAN
+DUONG VU AN
+HOANG THỊ DU
+HOANG THỊ ANH THU
+LA THI HUYEN ANH 
+NGUYEN THI HA LINH
+NGUYEN THI THUY DUONG
+LE HOAI LAM
+LƯƠNG THỊ MINH THU
+LE TIEN DAT
+CAO THỊ PHI YEN
+THAI THỊ HOAI THU
+NGUYEN THI MY DIEM
+NGUYEN VAN KHỞI
+THAM NGUYEN KHANH
+NGUYEN THI HONG DAO
+PHAN TRONG NHAT
+NGUYEN THI HONG
+TRAN THANH NGAN
+NGUYEN NGOC LINH`;
 
+            // Tạo một textarea tạm để sao chép nội dung
+            var tempTextarea = document.createElement("textarea");
+            tempTextarea.value = text;
+            document.body.appendChild(tempTextarea);
+
+            // Chọn và sao chép nội dung trong textarea tạm
+            tempTextarea.select();
+            document.execCommand("copy");
+
+            // Xóa textarea tạm
+            document.body.removeChild(tempTextarea);
+
+            // Thông báo người dùng về việc sao chép thành công
+            alert("Đã lấy danh sách lớp !");
+        }
       // ImageCache class, used for loading images and keeping them in memory
 
       function ImageCache () {
