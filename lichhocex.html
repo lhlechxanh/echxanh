@@ -67,7 +67,7 @@
     // Hàm để lấy dữ liệu từ API và hiển thị lên bảng
     async function fetchAndDisplaySchedule() {
         try {
-            const response = await fetch('https://script.google.com/macros/s/AKfycbyp7S_kVt2ngBKSqFNuhUYhkP-VitaRyodm6l8ZDofhccTLmSt2xyE4vPkaJ_wB7VMR/exec');
+            const response = await fetch('https://script.google.com/macros/s/AKfycbxFI-MHhE2lkrvtsjzSd0HIfv3Ad3Lmg2BroeG3hpFR6bDttR8vawR5Cm0nhjzrFWs_Kg/exec');
             const data = await response.json();
             const scheduleBody = document.getElementById('schedule-body');
             scheduleBody.innerHTML = '';  // Xóa nội dung cũ
