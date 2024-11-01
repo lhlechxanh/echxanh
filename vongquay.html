@@ -28,7 +28,44 @@
     </script><link href='echxanhjs/css/bootstrap.min.css' rel='stylesheet'/>
     <style type="text/css"></style>
 </head>
+<nav class="top-menu">
+    <a href="lichhocex.html">Lịch Học</a>
+    <a href="lichtrucnhat.html">Lịch Trực Nhật</a>
+</nav>
+
 <style>
+  .modal-title, .modal-body p {
+    color: black; /* Đặt màu chữ thành đen */
+}
+.top-menu {
+    background-color: #333; /* Màu nền của menu */
+    position: fixed; /* Cố định vị trí menu */
+    top: 0; /* Đặt menu ở phía trên cùng */
+    width: 100%; /* Chiều rộng của menu là 100% */
+    z-index: 1000; /* Đảm bảo menu hiển thị trên các phần tử khác */
+}
+
+.menu-container {
+    display: flex; /* Sử dụng Flexbox để xếp hàng ngang */
+    justify-content: space-around; /* Căn giữa và phân bổ khoảng cách đều giữa các nút */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    height: 50px; /* Chiều cao của menu */
+}
+
+.top-menu a {
+    color: white; /* Màu chữ */
+    text-align: center; /* Căn giữa nội dung */
+    padding: 14px 16px; /* Khoảng cách bên trong liên kết */
+    text-decoration: none; /* Bỏ gạch chân */
+}
+
+.top-menu a:hover {
+    background-color: #ddd; /* Màu nền khi di chuột qua */
+    color: black; /* Màu chữ khi di chuột qua */
+}
+
+
+
    /* Cài đặt mặc định cho nền desktop */
         body {
             background-image: url('https://c4.wallpaperflare.com/wallpaper/434/309/126/minimalism-cat-funny-digital-art-artwork-hd-wallpaper-preview.jpg');
