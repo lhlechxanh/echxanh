@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Trực Nhật Phòng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff; /* Nền trang màu trắng */
+            color: #333; /* Màu chữ tối để dễ đọc trên nền trắng */
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2980b9; /* Màu nền của thanh menu */
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng cho thanh menu */
+        }
+        nav {
+            display: flex; /* Sử dụng flexbox để dễ dàng căn chỉnh */
+            justify-content: space-around; /* Căn giữa các liên kết */
+            flex-direction: column; /* Mặc định là dọc */
+        }
+        nav a {
+            color: white; /* Màu chữ trong menu */
+            margin: 10px 0; /* Khoảng cách giữa các liên kết */
+            text-decoration: none; /* Bỏ gạch chân */
+            font-weight: bold;
+            font-size: 18px; /* Kích thước chữ lớn hơn */
+            padding: 10px 15px; /* Khoảng cách bên trong liên kết */
+            border-radius: 5px; /* Bo góc cho liên kết */
+            transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Hiệu ứng chuyển màu và phóng to khi hover */
+        }
+        nav a:hover {
+            background-color: #1abc9c; /* Màu nền khi hover */
+            color: white; /* Màu chữ khi hover */
+            transform: scale(1.1); /* Phóng to một chút khi hover */
+        }
+        /* Media query cho thiết bị di động */
+        @media (min-width: 768px) {
+            nav {
+                flex-direction: row; /* Chuyển sang chế độ ngang trên màn hình lớn */
+            }
+            nav a {
+                margin: 0 20px; /* Khoảng cách giữa các liên kết ngang */
+            }
+        }
+        h2 {
+            text-align: center;
+            color: #333; /* Màu tiêu đề tối */
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border-radius: 8px; /* Bo góc cho bảng */
+            overflow: hidden; /* Ẩn góc ngoài của bảng */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho bảng */
+        }
+        th {
+            background-color: #2980b9; /* Màu nền tiêu đề */
+            color: white; /* Màu chữ tiêu đề */
+            padding: 15px; /* Tăng khoảng cách bên trong ô */
+        }
+        td {
+            padding: 15px; /* Tăng khoảng cách bên trong ô */
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .highlight {
+            font-weight: bold;
+            color: black; /* Màu chữ số phòng thành màu đen */
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin: 20px;
+        }
+        tr:hover {
+            background-color: #f0f0f0; /* Màu nền khi hover qua hàng */
+        }
+        .date-cell {
+            background-color: #27ae60; /* Màu nền cho ô chứa ngày */
+            color: white; /* Màu chữ trắng */
+        }
+        .day-cell {
+            background-color: #e67e22; /* Màu nền cho ô chứa ngày trong tuần */
+            color: white; /* Màu chữ trắng */
+        }
+    </style>
+</head>
+<body>
+    <header>
+    <nav class="top-menu">
+        <a href="lichhocex.html">Lịch Học</a>
+        <a href="lichtrucnhat.html">Lịch Trực Nhật</a>
+        <a href="#">Vòng Quay May Mắn</a>
+    </nav>
+    </header>
+
+    <h2>Lịch Trực Nhật</h2>
+    <div id="error-message" class="error"></div> <!-- Thông báo lỗi -->
+    <table id="schedule-table">
+        <thead>
+            <tr>
+                <th class="day-cell">Chủ Nhật</th>
+                <th class="day-cell">Thứ Hai</th>
+                <th class="day-cell">Thứ Ba</th>
+                <th class="day-cell">Thứ Tư</th>
+                <th class="day-cell">Thứ Năm</th>
+                <th class="day-cell">Thứ Sáu</th>
+                <th class="day-cell">Thứ Bảy</th>
+            </tr>
+        </thead>
+        <tbody id="schedule-body">
+            <!-- Dữ liệu sẽ được thêm vào đây từ JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbz7XMXpeU2poA0X7zUmO9Rs-H2q5SsCIbpHgIXVrLAHqx6FTk8AAEZSi_z7x5FCPp20dg/exec'; // Thay YOUR_API_ENDPOINT bằng URL API của bạn
+
+        // Định nghĩa màu sắc cho từng phòng
+        const roomColors = {
+            '201-5': '#BCC4FF',
+            '2009': '#B1E9FF',
+            '2010': '#BCFFEE',
+            '203-5': '#FEFFDD',
+            '2014': '#D1FF9B',
+            '2015': '#FFc6FB',
+            '2016': '#8A4495',
+            '2020': '#C85B8A'
+        };
+
+        function isRoomNumber(value) {
+            return /^[0-9]+(-[0-9]+)?$/.test(value); // Kiểm tra xem giá trị có phải là số phòng hay không
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            if (!isNaN(date)) {
+                return date.toLocaleDateString('vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            }
+            return dateString; // Trả về giá trị gốc nếu không phải ngày hợp lệ
+        }
+
+        async function fetchAndDisplaySchedule() {
+            const errorMessage = document.getElementById('error-message');
+            const tableBody = document.getElementById('schedule-body');
+            tableBody.innerHTML = ''; // Xóa nội dung cũ nếu có
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error('Không thể lấy dữ liệu từ API'); // Ném lỗi nếu phản hồi không thành công
+                const data = await response.json();
+                errorMessage.textContent = ''; // Xóa thông báo lỗi nếu thành công
+
+                const todayString = new Date().toLocaleDateString('vi-VN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                const weekDays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+
+                data.forEach(weekData => {
+                    const row = document.createElement('tr');
+
+                    weekDays.forEach(day => {
+                        const cell = document.createElement('td');
+                        const content = weekData[day];
+
+                        if (content) {
+                            if (isRoomNumber(content)) {
+                                cell.textContent = content; // Hiển thị số phòng
+                                cell.classList.add('highlight'); // Tô màu ô nếu là phòng trực nhật
+                                cell.style.backgroundColor = roomColors[content] || '#fff'; // Gán màu cho ô
+                                cell.style.color = 'black'; // Màu chữ số phòng thành màu đen
+                            } else {
+                                const formattedDate = formatDate(content); // Hiển thị ngày tháng đã định dạng
+                                cell.textContent = formattedDate;
+                                cell.classList.add('date-cell'); // Tô màu cho ô chứa ngày
+                            }
+                        }
+                        row.appendChild(cell);
+                    });
+
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                errorMessage.textContent = error.message; // Hiển thị thông báo lỗi
+                console.error('Lỗi khi tải dữ liệu từ API:', error);
+            }
+        }
+
+        // Gọi hàm để lấy dữ liệu và hiển thị khi trang được tải
+        fetchAndDisplaySchedule();
+    </script>
+</body>
+</html>

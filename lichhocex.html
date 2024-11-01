@@ -3,8 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <header>
+    <nav class="top-menu">
+        <a href="lichhocex.html">Lịch Học</a>
+        <a href="lichtrucnhat.html">Lịch Trực Nhật</a>
+        <a href="#">Vòng Quay May Mắn</a>
+    </nav>
+</header>
+
     <title>Bảng Thời Khóa Biểu</title>
     <style>
+        header {
+    background-color: #2980b9; /* Màu nền của thanh menu */
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng cho thanh menu */
+}
+
+.top-menu {
+    display: flex; /* Sử dụng flexbox để dễ dàng căn chỉnh */
+    justify-content: space-around; /* Căn giữa các liên kết */
+    flex-direction: column; /* Mặc định là dọc */
+}
+
+.top-menu a {
+    color: white; /* Màu chữ trong menu */
+    margin: 10px 0; /* Khoảng cách giữa các liên kết */
+    text-decoration: none; /* Bỏ gạch chân */
+    font-weight: bold;
+    font-size: 18px; /* Kích thước chữ lớn hơn */
+    padding: 10px 15px; /* Khoảng cách bên trong liên kết */
+    border-radius: 5px; /* Bo góc cho liên kết */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Hiệu ứng chuyển màu và phóng to khi hover */
+}
+
+.top-menu a:hover {
+    background-color: #1abc9c; /* Màu nền khi hover */
+    color: white; /* Màu chữ khi hover */
+    transform: scale(1.1); /* Phóng to một chút khi hover */
+}
+
+/* Media query cho thiết bị di động */
+@media (min-width: 768px) {
+    .top-menu {
+        flex-direction: row; /* Chuyển sang chế độ ngang trên màn hình lớn */
+    }
+    .top-menu a {
+        margin: 0 20px; /* Khoảng cách giữa các liên kết ngang */
+    }
+}
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
