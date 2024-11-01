@@ -27,7 +27,6 @@
             border: 1px solid #ddd;
             padding: 15px;
             text-align: center;
-            transition: background-color 0.3s;
         }
         th {
             background-color: #B1E9FF;
@@ -37,36 +36,11 @@
             background-color: #fff;
             color: #555;
         }
-        td:hover {
-            background-color: #f0f0f0;
-        }
-        /* Màu sắc cho các buổi trong ngày */
-        .morning {
-            background-color: #ffecb3; /* Màu sáng */
-        }
-        .lunch {
-            background-color: #ffccbc; /* Màu trưa */
-        }
-        .afternoon {
-            background-color: #c8e6c9; /* Màu chiều */
-        }
-        /* Tô đỏ cho T7 và CN */
-        .red {
-            background-color: #ff8a80; /* Màu đỏ */
-            color: #fff; /* Chữ màu trắng */
-        }
-        .green {
-            background-color: #ffd700; /* Màu đỏ */
-            color: #fff; /* Chữ màu trắng */
-        }
         .time-cell {
             font-weight: bold;
         }
-        @media (max-width: 600px) {
-            th, td {
-                padding: 10px;
-                font-size: 14px;
-            }
+        .highlight {
+            background-color: #FFD700;
         }
     </style>
 </head>
@@ -76,84 +50,84 @@
 <table id="schedule-table">
     <thead>
         <tr>
-            <th class="green">Thời Gian </th>
+            <th>Thời Gian</th>
             <th>Thứ 2</th>
             <th>Thứ 3</th>
             <th>Thứ 4</th>
             <th>Thứ 5</th>
             <th>Thứ 6</th>
-            <th class="red">Thứ 7</th>
-            <th class="red">Chủ Nhật</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <td class="time-cell morning">Buổi Sáng <img src="https://img.icons8.com/ios/24/000000/sun.png"/></td>
-            <td class="morning" id="t2-morning"></td>
-            <td class="morning" id="t3-morning"></td>
-            <td class="morning" id="t4-morning"></td>
-            <td class="morning" id="t5-morning"></td>
-            <td class="morning" id="t6-morning"></td>
-            <td class="morning red" id="t7-morning"></td>
-            <td class="morning red" id="cn-morning"></td>
-        </tr>
-        <tr>
-            <td class="time-cell lunch">Buổi Trưa <img src="https://img.icons8.com/ios/24/000000/lunch.png" /></td>
-            <td class="lunch" id="t2-lunch"></td>
-            <td class="lunch" id="t3-lunch"></td>
-            <td class="lunch" id="t4-lunch"></td>
-            <td class="lunch" id="t5-lunch"></td>
-            <td class="lunch" id="t6-lunch"></td>
-            <td class="lunch red" id="t7-lunch"></td>
-            <td class="lunch red" id="cn-lunch"></td>
-        </tr>
-        <tr>
-            <td class="time-cell afternoon">Buổi Chiều <img src="https://img.icons8.com/ios/24/000000/evening.png" /></td>
-            <td class="afternoon" id="t2-afternoon"></td>
-            <td class="afternoon" id="t3-afternoon"></td>
-            <td class="afternoon" id="t4-afternoon"></td>
-            <td class="afternoon" id="t5-afternoon"></td>
-            <td class="afternoon" id="t6-afternoon"></td>
-            <td class="afternoon red" id="t7-afternoon"></td>
-            <td class="afternoon red" id="cn-afternoon"></td>
-        </tr>
+    <tbody id="schedule-body">
+        <!-- Dữ liệu sẽ được thêm vào đây -->
     </tbody>
 </table>
 
 <script>
-    async function fetchSchedule() {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyp7S_kVt2ngBKSqFNuhUYhkP-VitaRyodm6l8ZDofhccTLmSt2xyE4vPkaJ_wB7VMR/exec');
-        const data = await response.json();
+    // Hàm để lấy dữ liệu từ API và hiển thị lên bảng
+    async function fetchAndDisplaySchedule() {
+        try {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbyp7S_kVt2ngBKSqFNuhUYhkP-VitaRyodm6l8ZDofhccTLmSt2xyE4vPkaJ_wB7VMR/exec');
+            const data = await response.json();
+            const scheduleBody = document.getElementById('schedule-body');
+            scheduleBody.innerHTML = '';  // Xóa nội dung cũ
 
-        if (data.length) {
-            displaySchedule(data);
-        } else {
-            alert('Không tìm thấy dữ liệu.');
+            data.forEach(item => {
+                const timeCell = item.day.replace("\n", " ");
+                const row = document.createElement('tr');
+
+                // Thêm cột thời gian
+                const timeColumn = document.createElement('td');
+                timeColumn.textContent = timeCell;
+                timeColumn.classList.add('time-cell');
+                row.appendChild(timeColumn);
+
+                const days = ["星期一", "星期二", "星期三", "星期四", "星期五"];
+                days.forEach(day => {
+                    const column = document.createElement('td');
+                    column.textContent = item[day] ? item[day].replace("\n", " ") : '';
+                    row.appendChild(column);
+                });
+
+                scheduleBody.appendChild(row);
+            });
+
+            highlightCurrentTime();
+            setInterval(highlightCurrentTime, 60000);  // Cập nhật mỗi phút
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu từ API:", error);
         }
     }
 
-    function displaySchedule(schedule) {
-        schedule.forEach(item => {
-            const dayMap = {
-                "thứ 2": "t2",
-                "thứ 3": "t3",
-                "thứ 4": "t4",
-                "thứ 5": "t5",
-                "thứ 6": "t6",
-                "thứ 7": "t7",
-                "chủ nhật": "cn"
-            };
-            
-            const dayKey = dayMap[item.day.toLowerCase()];
-            if (dayKey) {
-                document.getElementById(`${dayKey}-morning`).textContent += item.morning ? item.morning : '';
-                document.getElementById(`${dayKey}-lunch`).textContent += item.lunch ? item.lunch : '';
-                document.getElementById(`${dayKey}-afternoon`).textContent += item.afternoon ? item.afternoon : '';
+    // Hàm để làm nổi bật thời gian hiện tại
+    function highlightCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+
+        const rows = document.querySelectorAll("#schedule-body tr");
+
+        rows.forEach(row => {
+            row.classList.remove("highlight");  // Xóa lớp bôi đen trước đó
+            const timeText = row.cells[0].textContent;
+
+            const timeRange = timeText.match(/(\d{2}:\d{2})\s\|\s(\d{2}:\d{2})/);
+            if (timeRange) {
+                const startTime = timeRange[1].split(":").map(Number);
+                const endTime = timeRange[2].split(":").map(Number);
+
+                const startMinutes = startTime[0] * 60 + startTime[1];
+                const endMinutes = endTime[0] * 60 + endTime[1];
+                const currentMinutes = hours * 60 + minutes;
+
+                if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+                    row.classList.add("highlight");
+                }
             }
         });
     }
 
-    fetchSchedule();
+    fetchAndDisplaySchedule();
 </script>
 
 </body>
