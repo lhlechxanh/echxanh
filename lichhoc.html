@@ -29,7 +29,6 @@
             margin: 10px 0;
             text-decoration: none;
             font-weight: bold;
-            font-size: 18px;
             padding: 10px 15px;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.3s;
@@ -58,13 +57,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            border-radius: 10px;
-            overflow: hidden;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            border: 2px solid #8B4513; /* Viền màu nâu (mã màu nâu là #8B4513) */
+            border: 2px solid #8B4513;
             padding: 15px;
             text-align: center;
         }
@@ -74,25 +71,26 @@
             color: #333;
         }
 
-        td {
-            color: #555;
+        /* Màu sắc ô không có tiết */
+        td.no-class {
+            background-color: black; /* Nền màu đen cho ô không có tiết */
+            color: white; /* Màu chữ trắng cho dễ đọc */
         }
 
         /* Thêm màu sắc cho các ngày trong tuần */
-        td:nth-child(2) { background-color: #D1F2EB; } /* Thứ 2 */
-        td:nth-child(3) { background-color: #F9E79F; } /* Thứ 3 */
-        td:nth-child(4) { background-color: #FADBD8; } /* Thứ 4 */
-        td:nth-child(5) { background-color: #F5B7B1; } /* Thứ 5 */
-        td:nth-child(6) { background-color: #E8DAEF; } /* Thứ 6 */
+        td:nth-child(2) { background-color: #D1F2EB; }
+        td:nth-child(3) { background-color: #F9E79F; }
+        td:nth-child(4) { background-color: #FADBD8; }
+        td:nth-child(5) { background-color: #F5B7B1; }
+        td:nth-child(6) { background-color: #E8DAEF; }
 
         .time-cell {
             font-weight: bold;
-            background-color: #A3C1AD; /* Màu nền cho ô thời gian */
-            color: #333;
+            background-color: #A3C1AD;
         }
 
         .highlight {
-            background-color: #FFD700; /* Nổi bật thời gian hiện tại */
+            background-color: #FFD700; /* Làm sáng ô hiện tại */
         }
 
         .new-content {
@@ -137,13 +135,12 @@
                 const days = ["星期一", "星期二", "星期三", "星期四", "星期五"];
                 const dayCells = days.map(day => {
                     const cellContent = item[day] ? item[day].replace("\n", " ") : '';
-                    // Thêm lớp mới cho ô có nội dung mới (giả định)
-                    return `<td class="${cellContent ? 'new-content' : ''}">${cellContent}</td>`;
+                    return `<td class="${cellContent ? 'new-content' : 'no-class'}">${cellContent || ''}</td>`;
                 }).join('');
                 return `<tr><td class="time-cell">${timeCell}</td>${dayCells}</tr>`;
             }).join('');
             highlightCurrentTime();
-            setInterval(highlightCurrentTime, 60000); // Cập nhật mỗi phút
+            setInterval(highlightCurrentTime, 60000);
         } catch (error) {
             console.error("Lỗi khi lấy dữ liệu từ API:", error);
         }
@@ -167,6 +164,14 @@
 
                 if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
                     row.classList.add("highlight");
+                    row.cells[0].classList.add("highlight"); // Làm sáng ô thời gian
+
+                    // Làm sáng các ô môn học có nội dung
+                    for (let i = 1; i < row.cells.length; i++) {
+                        if (row.cells[i].textContent) {
+                            row.cells[i].classList.add("highlight");
+                        }
+                    }
                 }
             }
         });
