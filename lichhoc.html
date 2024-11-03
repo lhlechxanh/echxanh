@@ -115,12 +115,13 @@
 <header>
     <nav class="top-menu">
         <a href="lichhoc.html">Lịch Học</a>
+        <a href="lichtrucnhat.html">Lịch Trực Nhật</a>
         <a href="vongquay.html">Vòng Quay May Mắn</a>
     </nav>
 </header>
 
 <h1>Bảng Thời Khóa Biểu</h1>
-<div id="result" class="result"> Đang lấy thông tin phòng trực nhật  </div> <!-- Di chuyển div result lên trên bảng -->
+<div id="result" class="result">Đang lấy thông tin phòng trực nhật 🐸👌</div> <!-- Di chuyển div result lên trên bảng -->
 <table id="schedule-table">
     <thead>
         <tr>
@@ -136,7 +137,6 @@
 </table>
 
 <script>
-    // Thay đổi URL dưới đây thành địa chỉ API của bạn
     const apiURL = 'https://script.google.com/macros/s/AKfycbxFI-MHhE2lkrvtsjzSd0HIfv3Ad3Lmg2BroeG3hpFR6bDttR8vawR5Cm0nhjzrFWs_Kg/exec';
 
     async function fetchData() {
@@ -157,23 +157,37 @@
         const dataFromAPI = await fetchData();
         if (!dataFromAPI) return; // Nếu không có dữ liệu, thoát
 
-        // Lấy ngày hôm nay theo định dạng UTC
+        // Lấy ngày hôm nay và ngày mai theo định dạng UTC
         const today = new Date();
-        const todayUTC = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()).toISOString();
+        const todayUTC = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getDate()).toISOString();
+        const tomorrowUTC = new Date(today.getUTCFullYear(), today.getUTCMonth(), today.getDate() + 1).toISOString();
 
         // Tìm kiếm các ngày trùng khớp
-        const matchingDates = dataFromAPI.filter(item => item.date1 === todayUTC);
+        const todayClasses = dataFromAPI.filter(item => item.date1 === todayUTC);
+        const tomorrowClasses = dataFromAPI.filter(item => item.date1 === tomorrowUTC);
         
         // Hiển thị kết quả
         const resultDiv = document.getElementById("result");
         resultDiv.innerHTML = ""; // Xóa kết quả trước đó
 
-        if (matchingDates.length > 0) {
-            matchingDates.forEach(item => {
+        // Thêm tiêu đề cho hôm nay
+        resultDiv.innerHTML += "<h3>Hôm nay:</h3>";
+        if (todayClasses.length > 0) {
+            todayClasses.forEach(item => {
                 resultDiv.innerHTML += `<p>Ngày: ${item.dayOfWeek1}, Phòng: ${item.room1}</p>`;
             });
         } else {
-            resultDiv.innerHTML = "<p>Không có lớp nào cho ngày hôm nay.</p>";
+            resultDiv.innerHTML += "<p>Không có lớp nào cho hôm nay.</p>";
+        }
+
+        // Thêm tiêu đề cho ngày mai
+        resultDiv.innerHTML += "<h3>Ngày Mai:</h3>";
+        if (tomorrowClasses.length > 0) {
+            tomorrowClasses.forEach(item => {
+                resultDiv.innerHTML += `<p>Ngày: ${item.dayOfWeek1}, Phòng: ${item.room1}</p>`;
+            });
+        } else {
+            resultDiv.innerHTML += "<p>Không có lớp nào cho ngày mai.</p>";
         }
     }
 
