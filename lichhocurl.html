@@ -1,103 +1,80 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lấy Dữ Liệu và Lưu vào Tệp JSON</title>
+    <title>Save Schedule as JSON</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        pre {
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        #saveButton {
-            display: none; /* Nút lưu mặc định không hiển thị */
+            margin: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h1>Lấy Dữ Liệu từ API và Lưu vào File JSON</h1>
-    <button onclick="fetchData()">Lấy Dữ Liệu</button>
-    
-    <div id="saveButton">
-        <button onclick="saveJsonFile()">Lưu Dữ Liệu vào Tệp JSON</button>
-    </div>
+<h1>Save Class Schedule</h1>
 
-    <h3>Dữ Liệu JSON:</h3>
-    <pre id="jsonOutput">Dữ liệu sẽ được hiển thị ở đây...</pre>
+<!-- Nút bấm để lưu dữ liệu thành tệp JSON -->
+<button id="saveButton">Save Schedule as JSON</button>
 
-    <script>
-        let fetchedData = null;  // Biến lưu trữ dữ liệu API
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script>
+    // API URL
+    const apiUrl = "https://script.google.com/macros/s/AKfycbxwAb94t7_CS7bk6oPSEcICLTeuiGPlTi2jSjj_hsOMsBLH76pzIUAdsEMsszc6KmM/exec";
 
-        // Hàm lấy dữ liệu từ API
-        async function fetchData() {
-            const apiUrl = "https://script.google.com/macros/s/AKfycbxwAb94t7_CS7bk6oPSEcICLTeuiGPlTi2jSjj_hsOMsBLH76pzIUAdsEMsszc6KmM/exec";
+    // Hàm lấy dữ liệu từ API
+    async function fetchData() {
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return null;
+        }
+    }
 
-            try {
-                // Gửi yêu cầu fetch để lấy dữ liệu từ API
-                const response = await fetch(apiUrl);
-                
-                // Kiểm tra nếu phản hồi thành công
-                if (!response.ok) {
-                    throw new Error('Lỗi khi lấy dữ liệu từ API');
+    // Hàm format dữ liệu thành định dạng cần lưu
+    function formatData(data) {
+        return data.map(item => {
+            let formattedItem = {
+                startTime: item.startTime,
+                endTime: item.endTime,
+                events: []
+            };
+
+            // Chuyển thông tin từ các ngày thành phần "events"
+            Object.keys(item).forEach(date => {
+                if (new Date(date).toString() !== "Invalid Date") {
+                    formattedItem.events.push({
+                        date: date,
+                        summary: item[date].split('\n')[0],
+                        location: item[date].split('\n')[1] || '',
+                        description: item[date].split('\n')[2] || ''
+                    });
                 }
+            });
 
-                // Chuyển đổi phản hồi thành định dạng JSON
-                fetchedData = await response.json();
-                
-                // Hiển thị dữ liệu JSON
-                document.getElementById('jsonOutput').textContent = JSON.stringify(fetchedData, null, 2);
+            return formattedItem;
+        });
+    }
 
-                // Hiển thị nút lưu dữ liệu sau khi lấy dữ liệu thành công
-                document.getElementById('saveButton').style.display = 'block';
+    // Hàm lưu dữ liệu vào tệp JSON
+    async function saveDataAsJson() {
+        const data = await fetchData();
+        if (!data) return;
 
-                // Tự động lưu dữ liệu
-                saveJsonFile();
-            } catch (error) {
-                // Hiển thị lỗi nếu có sự cố
-                document.getElementById('jsonOutput').textContent = 'Lỗi: ' + error.message;
-            }
-        }
+        const formattedData = formatData(data);
 
-        // Hàm để lưu dữ liệu JSON vào tệp
-        function saveJsonFile() {
-            if (fetchedData === null) {
-                alert("Vui lòng lấy dữ liệu trước khi lưu.");
-                return;
-            }
+        // Chuyển đổi dữ liệu thành JSON và tải xuống
+        const blob = new Blob([JSON.stringify(formattedData, null, 2)], { type: "application/json" });
+        saveAs(blob, "lichhoc.json");
+    }
 
-            // Tạo Blob từ dữ liệu JSON
-            const blob = new Blob([JSON.stringify(fetchedData, null, 2)], { type: 'application/json' });
-            
-            // Tạo một URL tạm thời để tải tệp
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'lichhoc.json';  // Tên tệp sẽ là lichhoc.json
-
-            // Mô phỏng nhấp chuột để tải tệp
-            link.click();
-        }
-    </script>
+    // Gắn sự kiện cho nút bấm
+    document.getElementById("saveButton").addEventListener("click", saveDataAsJson);
+</script>
 
 </body>
 </html>
