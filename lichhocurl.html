@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lấy Dữ Liệu và Lưu vào Tệp JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #saveButton {
+            display: none; /* Nút lưu mặc định không hiển thị */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lấy Dữ Liệu từ API và Lưu vào File JSON</h1>
+    <button onclick="fetchData()">Lấy Dữ Liệu</button>
+    
+    <div id="saveButton">
+        <button onclick="saveJsonFile()">Lưu Dữ Liệu vào Tệp JSON</button>
+    </div>
+
+    <h3>Dữ Liệu JSON:</h3>
+    <pre id="jsonOutput">Dữ liệu sẽ được hiển thị ở đây...</pre>
+
+    <script>
+        let fetchedData = null;  // Biến lưu trữ dữ liệu API
+
+        // Hàm lấy dữ liệu từ API
+        async function fetchData() {
+            const apiUrl = "https://script.google.com/macros/s/AKfycbxwAb94t7_CS7bk6oPSEcICLTeuiGPlTi2jSjj_hsOMsBLH76pzIUAdsEMsszc6KmM/exec";
+
+            try {
+                // Gửi yêu cầu fetch để lấy dữ liệu từ API
+                const response = await fetch(apiUrl);
+                
+                // Kiểm tra nếu phản hồi thành công
+                if (!response.ok) {
+                    throw new Error('Lỗi khi lấy dữ liệu từ API');
+                }
+
+                // Chuyển đổi phản hồi thành định dạng JSON
+                fetchedData = await response.json();
+                
+                // Hiển thị dữ liệu JSON
+                document.getElementById('jsonOutput').textContent = JSON.stringify(fetchedData, null, 2);
+
+                // Hiển thị nút lưu dữ liệu sau khi lấy dữ liệu thành công
+                document.getElementById('saveButton').style.display = 'block';
+
+                // Tự động lưu dữ liệu
+                saveJsonFile();
+            } catch (error) {
+                // Hiển thị lỗi nếu có sự cố
+                document.getElementById('jsonOutput').textContent = 'Lỗi: ' + error.message;
+            }
+        }
+
+        // Hàm để lưu dữ liệu JSON vào tệp
+        function saveJsonFile() {
+            if (fetchedData === null) {
+                alert("Vui lòng lấy dữ liệu trước khi lưu.");
+                return;
+            }
+
+            // Tạo Blob từ dữ liệu JSON
+            const blob = new Blob([JSON.stringify(fetchedData, null, 2)], { type: 'application/json' });
+            
+            // Tạo một URL tạm thời để tải tệp
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'lichhoc.json';  // Tên tệp sẽ là lichhoc.json
+
+            // Mô phỏng nhấp chuột để tải tệp
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
